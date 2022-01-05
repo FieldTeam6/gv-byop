@@ -46,7 +46,7 @@ class HangoutsListViewManager {
 			this.currentNumberSending = this.numberQueue.shift();
 			this.showNumberInput(function(successful) {
 				if (!successful) {
-					return alert('Google Voice bulk texter:\nError: could not find phone number input.')
+					return alert('Google Voice BYOP:\nError: could not find phone number input.')
 				}
 				that.fillNumberInput();
 				that.startChat();

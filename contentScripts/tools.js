@@ -33,7 +33,7 @@ function keepTrying(method, silenceErrors, cb) {
 			// the app failed
 			if (!silenceErrors && giveUp) {
 				if (siteIsGoogleVoice) {
-					showFatalError(`You can find support resources by opening the Google Voice Bulk Texter popup and clicking "Get Help" at the bottom.\n\nError: "${getFunctionName(method)}" failed.`, true);
+					showFatalError(`You can find support resources by opening the Google Voice BYOP popup and clicking "Get Help" at the bottom.\n\nError: "${getFunctionName(method)}" failed.`, true);
 				} else {
 					showFatalError('Are you sure Google Voice texting via Hangouts is enabled?\nAlso, be aware that this extension is not compatible with the Google Hangouts Chrome extension. If you have the Hangouts extension installed you\'ll need to temporarily disable it.', false);
 				}
@@ -53,7 +53,7 @@ function keepTrying(method, silenceErrors, cb) {
  * @param {Function}   cb             to be called with the results from method when we're done trying
  */
 function keepTryingAsPromised(method, silenceErrors) {
-	console.log('Bulk SMS - Running: ', getFunctionName(method));
+	console.log('GV-BYOP SMS - Running: ', getFunctionName(method));
 	const waitTime = 400; // 400ms
 	return new Promise((resolve, reject) => {
 		setTimeout(() => {
@@ -75,8 +75,8 @@ function showFatalError(message, reload) {
     }
     const manifest = chrome.runtime.getManifest();
 	const reloadMessage = '\n\nWhen you click "ok" the page will refresh.';
-	const fullMessage = `Google Voice bulk texter v${manifest.version}:\nText failed. ${message} ${reload ? reloadMessage : ''}`;
-	console.error('Bulk SMS - ' + fullMessage);
+	const fullMessage = `Google Voice BYOP v${manifest.version}:\nText failed. ${message} ${reload ? reloadMessage : ''}`;
+	console.error('GV-BYOP SMS - ' + fullMessage);
 	alert(fullMessage);
     if (reload) {
         window.location.reload();

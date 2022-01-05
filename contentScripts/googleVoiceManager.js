@@ -21,7 +21,7 @@ class GoogleVoiceSiteManager {
         //https://voice.google.com/?phoneNo=123456789&sms=Hello
         if (checkUrl.startsWith('https://voice.google.com/')) {
             if (checkUrl.includes('phoneNo') && checkUrl.includes('sms')) {
-                this.currentNumberSending = checkUrl.substring(checkUrl.indexOf('phoneNo ') + 8, checkUrl.indexOf(' & '))
+                this.currentNumberSending = checkUrl.substring(checkUrl.indexOf('phoneNo') + 8, checkUrl.indexOf('&'))
                 this.messagesToSend = {
                     [this.currentNumberSending]: decodeURIComponent(checkUrl.substring(checkUrl.indexOf('sms') + 4, checkUrl.length))
                 }
@@ -65,7 +65,7 @@ class GoogleVoiceSiteManager {
                 let currentStep = sendExecutionQueue.shift().bind(this);
                 const result = await keepTryingAsPromised(currentStep, retryCount > 0);
                 if (!result) {
-                    console.log(`Bulk SMS - Step failed (${getFunctionName(currentStep)}), retrying message.`);
+                    console.log(`GV-BYOP SMS - Step failed (${getFunctionName(currentStep)}), retrying message.`);
                     retryCount--; // if this keeps happening, alert on it
 
                     if (verifyOnly) {
@@ -91,7 +91,7 @@ class GoogleVoiceSiteManager {
             let currentStep = sendExecutionQueue.shift().bind(this);
             const result = await keepTryingAsPromised(currentStep, retryCount > 0);
             if (!result) {
-                console.log(`Bulk SMS - Step failed (${getFunctionName(currentStep)}), retrying message.`);
+                console.log(`GV-BYOP SMS - Step failed (${getFunctionName(currentStep)}), retrying message.`);
                 retryCount--; // if this keeps happening, alert on it
 
                 if (verifyOnly) {
