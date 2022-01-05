@@ -21,23 +21,13 @@ class GoogleVoiceSiteManager {
         //https://voice.google.com/?phoneNo=123456789&sms=Hello
         if (checkUrl.startsWith('https://voice.google.com/')) {
             if (checkUrl.includes('phoneNo') && checkUrl.includes('sms')) {
-                this.currentNumberSending = checkUrl.substring(checkUrl.indexOf('phoneNo') + 8, checkUrl.indexOf('&'))
+                this.currentNumberSending = checkUrl.substring(checkUrl.indexOf('phoneNo ') + 8, checkUrl.indexOf(' & '))
                 this.messagesToSend = {
                     [this.currentNumberSending]: decodeURIComponent(checkUrl.substring(checkUrl.indexOf('sms') + 4, checkUrl.length))
                 }
                 console.log(this.messagesToSend)
-                this.showNumberInput()
-                await this.sleep(500)
-                this.fillNumberInput()
-                await this.sleep(100)
-                const ke = new KeyboardEvent('keydown', {
-                    bubbles: true,
-                    cancelable: true,
-                    keyCode: 13
-                });
-                document.body.dispatchEvent(ke);
-                this.writeMessage()
-                this.sendMessage()
+
+                this.sendFromQueueBYOP()
             }
         }
         chrome.runtime.onMessage.addListener((message, sender, response) => {
@@ -88,6 +78,31 @@ class GoogleVoiceSiteManager {
                 if (getFunctionName(currentStep) === 'sendMessage') {
                     verifyOnly = true; // we don't want to risk sending a message twice
                 }
+            }
+        }
+    }
+
+    async sendFromQueueBYOP() {
+        let retryCount = 5;
+        let verifyOnly = false;
+
+        let sendExecutionQueue = this.getSendExecutionQueue();
+        while (sendExecutionQueue.length) {
+            let currentStep = sendExecutionQueue.shift().bind(this);
+            const result = await keepTryingAsPromised(currentStep, retryCount > 0);
+            if (!result) {
+                console.log(`Bulk SMS - Step failed (${getFunctionName(currentStep)}), retrying message.`);
+                retryCount--; // if this keeps happening, alert on it
+
+                if (verifyOnly) {
+                    sendExecutionQueue = this.getVerificationOnlyExecutionQueue();
+                } else {
+                    // otherwise start over in the execution queue
+                    sendExecutionQueue = this.getSendExecutionQueue();
+                }
+            }
+            if (getFunctionName(currentStep) === 'sendMessage') {
+                verifyOnly = true; // we don't want to risk sending a message twice
             }
         }
     }
