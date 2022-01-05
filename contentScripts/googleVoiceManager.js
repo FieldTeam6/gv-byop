@@ -27,10 +27,15 @@ class GoogleVoiceSiteManager {
                 }
                 console.log(this.messagesToSend)
                 this.showNumberInput()
-                await this.sleep(1000)
+                await this.sleep(500)
                 this.fillNumberInput()
-                this.startChat()
-                this.confirmChatSwitched()
+                await this.sleep(100)
+                const ke = new KeyboardEvent('keydown', {
+                    bubbles: true,
+                    cancelable: true,
+                    keyCode: 13
+                });
+                document.body.dispatchEvent(ke);
                 this.writeMessage()
                 this.sendMessage()
             }
