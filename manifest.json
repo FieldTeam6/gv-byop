@@ -1,14 +1,11 @@
 {
     "manifest_version": 2,
-
     "name": "Google Voice BYOP",
-
     "short_name": "GV-BYOP",
-
-    "description": "Helper extension to send Turbo BYOP messages via Google Voice. ",
-
     "version": "0.2.0",
-
+    "description": "Helper extension to send Turbo BYOP messages via Google Voice. ",
+    "author": "BEI.RE Corp",
+    "homepage_url": "https://www.bei.re",
     "background": {
         "scripts": ["background.js"]
     },
