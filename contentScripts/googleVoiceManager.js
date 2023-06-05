@@ -9,7 +9,6 @@ class GoogleVoiceSiteManager {
         this.currentNumberSending = '';
     }
 
-
     sleep = (ms) => {
         return new Promise(
             resolve => setTimeout(resolve, ms),
@@ -221,14 +220,16 @@ class GoogleVoiceSiteManager {
     }
 
     confirmThreadHeaderUpdated() {
-        let chatLoadedHeader = document.querySelector(selectors.gvChatLoadedHeader); // the header switches to this after sending is complete. If we move on before this, it can break things.
+        let chatLoadedHeader = document.querySelector(selectors.gvChatLoadedHeader);
+
+        // If we move on before this, it can break things
         if (chatLoadedHeader) {
             return true;
         }
     }
 
     confirmSent() {
-        let sendingNote = document.querySelector(selectors.gvSendingNote); // this is the note that says "Sending", it will disappear when it is finished
+        let sendingNote = document.querySelector(selectors.gvSendingNote);
 
         if (!sendingNote) {
             // check if the message we sent is showing up in the chat window
