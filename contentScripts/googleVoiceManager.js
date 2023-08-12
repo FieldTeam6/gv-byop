@@ -139,21 +139,16 @@ class GoogleVoiceSiteManager {
     }
 
     fillNumberInput() {
-        let numInput = document.querySelector(selectors.gvNumInput);
-        if (numInput && numInput.offsetParent !== null) {
-            numInput.value = this.currentNumberSending;
+		let numInput = document.querySelector(selectors.gvNumInput);
+		if (numInput && numInput.offsetParent !== null) {
+			numInput.value = this.currentNumberSending;
+			simulateKeyPress(numInput);
 
-            // this fires the necessary events for Google Voice to pick up
-            numInput.focus();
-            numInput.select();
-            document.execCommand('cut');
-            document.execCommand('paste');
-
-            // confirm that the number was added as expected
-            let numInputConfirm = document.querySelector(selectors.gvNumInput);
-            return numInputConfirm && numInputConfirm.value === this.currentNumberSending;
-        }
-    }
+			// confirm that the number was added as expected
+			let numInputConfirm = document.querySelector(selectors.gvNumInput);
+			return numInputConfirm && numInputConfirm.value === this.currentNumberSending;
+		}
+	}
 
     // clicks the "start SMS" button on the number dropdown
     startChat() {
@@ -189,35 +184,28 @@ class GoogleVoiceSiteManager {
         }
     }
 
-    sendMessage() {
-        var messageEditor = document.querySelector(selectors.gvMessageEditor);
-        if (!messageEditor) {
-            return;
-        }
+	sendMessage() {
+		var messageEditor = document.querySelector(selectors.gvMessageEditor);
+		if (!messageEditor) {
+			return;
+		}
 
-        messageEditor.focus();
-        if (messageEditor.select) {
-            messageEditor.select();
-        } else {
-            document.execCommand('selectAll', false, null)
-        }
-        document.execCommand('cut');
-        document.execCommand('paste');
+		simulateKeyPress(messageEditor);
 
-        // click send button
-        let sendButtonOld = document.querySelector(selectors.gvSendButtonOld);
-        let sendButtonNew = document.querySelector(selectors.gvSendButtonNew);
-        if (sendButtonOld && sendButtonOld.offsetParent !== null && sendButtonOld.getAttribute('aria-disabled') === 'false') {
-            sendButtonOld.click();
-            return true;
-        }
-        if (sendButtonNew && sendButtonNew.offsetParent !== null && sendButtonNew.disabled === false) {
-            sendButtonNew.dispatchEvent(new Event('mousedown'));
-            sendButtonNew.dispatchEvent(new Event('mouseup'));
-            sendButtonNew.click();
-            return true;
-        }
-    }
+		// click send button
+		let sendButtonOld = document.querySelector(selectors.gvSendButtonOld);
+		let sendButtonNew = document.querySelector(selectors.gvSendButtonNew);
+		if (sendButtonOld && sendButtonOld.offsetParent !== null && sendButtonOld.getAttribute('aria-disabled') === 'false') {
+			sendButtonOld.click();
+			return true;
+		}
+		if (sendButtonNew && sendButtonNew.offsetParent !== null && sendButtonNew.disabled === false) {
+			sendButtonNew.dispatchEvent(new Event('mousedown'));
+			sendButtonNew.dispatchEvent(new Event('mouseup'));
+			sendButtonNew.click();
+			return true;
+		}
+	}
 
     confirmThreadHeaderUpdated() {
         let chatLoadedHeader = document.querySelector(selectors.gvChatLoadedHeader);
